@@ -6,7 +6,7 @@ import re
 contadorSaltos = 0
 urlsVisitadas = []
 listaUrls = []
-MAX_LINKS = 40;
+MAX_LINKS = 35;
 maxEnlaces = 0; # count number of visited
 
 def extraerdatos(url, page_anidada):
@@ -55,5 +55,6 @@ def extraerdatos(url, page_anidada):
 
 
 extraerdatos('http://miguelms.es',0)
-print 'number of different links: ' + str(len(urlsVisitadas))
+print '==== STATS ===='
+print 'Number of different links: ' + str(len(urlsVisitadas))
 print contadorSaltos
