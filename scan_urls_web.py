@@ -16,14 +16,15 @@ def extraerdatos(url):
             urls_pagina = html.findAll('a')
             for url in urls_pagina:
                 url = url.get('href').encode('utf-8')
-                if(url != '#' and ('http' or 'https') in url):
-                    print 'url: ' + str(url)
-                    urlsVisitadas.append(str(url))
-                    extraerdatos(str(url))
+                if(url not in urlsVisitadas):
+                    if(url != '#' and ('http' or 'https') in url):
+                        print 'url: ' + str(url)
+                        urlsVisitadas.append(str(url))
+                        extraerdatos(str(url))
         else:
             print 'Error en la web' + url
 
 
 extraerdatos('http://miguelms.es')
-print 'number of links: ' + str(len(urlsVisitadas))
+print 'number of different links: ' + str(len(urlsVisitadas))
 print contadorSaltos
