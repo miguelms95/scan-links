@@ -5,9 +5,11 @@ import requests
 contadorSaltos = 0
 urlsVisitadas = []
 listaUrls = []
+MAX_LINKS = 5;
+maxEnlaces = 0; # count number of visited
 
 def extraerdatos(url):
-    global contadorSaltos
+    global contadorSaltos, maxEnlaces
     if url not in urlsVisitadas:
         page = requests.get(url);
         if (page.status_code == 200):   # la página web ha cargado correctamente
@@ -28,17 +30,19 @@ def extraerdatos(url):
                     if(url != None):
                         urls_pag.append(url)
                 for url in urls_pag:
-                    url = url.encode('utf-8')
-                    if (url != None):  # There are <a> items without 'href' attribute
-                        if(url not in listaUrls):
-                            if(url != '#' and ('http' or 'https') in url):
-                                print 'url: ' + str(url)
-                                listaUrls.append(str(url))
-                                extraerdatos(str(url))
+                    if (maxEnlaces <= MAX_LINKS):
+                        url = url.encode('utf-8')
+                        if (url != None):  # There are <a> items without 'href' attribute
+                            if(url not in listaUrls):
+                                if(url != '#' and ('http' or 'https') in url):
+                                    print 'url: ' + str(url)
+                                    listaUrls.append(str(url))
+                                    maxEnlaces += 1;
+                                    extraerdatos(str(url))
             except UnicodeEncodeError:
                 print 'error unicode'
         else:
-            print 'Error en la web ' + url +'\n'
+            print '! --> Error en la web ' + url +'\n'
 
 
 extraerdatos('http://miguelms.es')
