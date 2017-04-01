@@ -37,9 +37,9 @@ def extraerdatos(url, page_anidada):
                             titulo=titulo.string
                             titulo = str(titulo).replace('\n','')
                             titulo = titulo.replace('\t', ' ')
-                            print anidacionTabs+'# ' + str(contadorSaltos) + ' - ' + titulo
+                            print anidacionTabs+'#' + str(contadorSaltos) + ' - ' + titulo
                         else:
-                            print anidacionTabs+'# ' + str(contadorSaltos)
+                            print anidacionTabs+'#' + str(contadorSaltos)
                         urls_pag_raw = html.findAll('a')
                         urls_pag = []
                         for url in urls_pag_raw:
@@ -48,7 +48,7 @@ def extraerdatos(url, page_anidada):
                                 urls_pag.append(url)
                         anidacionTabs += '\t'
                         for url in urls_pag:
-                            if (maxEnlaces <= MAX_LINKS):
+                            if (contadorSaltos <= MAX_LINKS):
                                 url = url.encode('utf-8')
                                 if (url != None):  # There are <a> items without 'href' attribute
                                     if(url not in listaUrls):
