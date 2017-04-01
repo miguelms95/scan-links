@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
 import requests
-import re
 
 contadorSaltos = 0
 urlsVisitadas = []
 listaUrls = []
-MAX_LINKS = 50; # Set the max number of links to scan (the net is infinite :P)
-URL_SCAN = 'http://miguelms.es'
+MAX_LINKS = 40;                  # Set the max number of links to scan (the net is infinite :P)
+URL_SCAN = 'http://google.com'   # Set the page you want to scan
 
 maxEnlaces = 0; # count number of visited
 domain = ''
@@ -21,7 +20,7 @@ def extraerdatos(url, page_anidada):
     anidacionTabs = ''
     for i in range(page_anidada):
         anidacionTabs = anidacionTabs + '  '
-    if url not in urlsVisitadas:
+    if (url not in urlsVisitadas) and (domain in url):
         if 'mailto:' in url:
             print anidacionTabs+'error unicode'
         else:
@@ -48,7 +47,7 @@ def extraerdatos(url, page_anidada):
                                 urls_pag.append(url)
                         anidacionTabs += '\t'
                         for url in urls_pag:
-                            if (contadorSaltos <= MAX_LINKS):
+                            if (contadorSaltos <= (MAX_LINKS-1)):
                                 url = url.encode('utf-8')
                                 if (url != None):  # There are <a> items without 'href' attribute
                                     if(url not in listaUrls):
@@ -70,5 +69,4 @@ def extraerdatos(url, page_anidada):
 
 extraerdatos(URL_SCAN,0)
 print '==== STATS ===='
-print 'Number of different links: ' + str(len(urlsVisitadas))
-print contadorSaltos
+print '' + str(maxEnlaces) + ' links in '+ str(len(urlsVisitadas)) +' page(s)'
