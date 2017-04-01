@@ -5,4 +5,5 @@ This program prints a hierarchy of the linked urls in a web. Exploring all the n
 
 * Python, with BeautifoulSoup and requests libraries
 
-<img src="screenshot.PNG">
+Example: scanning the urls at google.com
+<img src="screenshot_1.PNG">
