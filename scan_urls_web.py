@@ -8,7 +8,7 @@ urlsVisitadas = []
 listaUrls = []
 enlacesErroneos = 0
 listaEnlacesErroneos = []
-MAX_LINKS = 500;                  # Set the max number of links to scan (the net is infinite :P)
+MAX_LINKS = 500;                  # Set the max number of pages to jump during the scan (the net is infinite :P)
 URL_SCAN = 'http://google.com'   # Set the page you want to scan
 
 maxEnlaces = 0; # count number of visited
@@ -27,7 +27,7 @@ def extraerdatos(url, indentationLevel):
     anidacionTabs = ''
     for i in range(indentationLevel):
         anidacionTabs = anidacionTabs + '  '
-    if (url not in urlsVisitadas) and (domain in url):
+    if (url not in urlsVisitadas) and (domain in url): # here comment 'and (domain in url)' for checking the links in the webpages linked too (not recommended)
         if 'mailto:' in url:
             print anidacionTabs+'ERROR: unicode'
         else:
