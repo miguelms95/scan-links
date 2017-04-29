@@ -52,7 +52,7 @@ def extraerdatos(url, indentationLevel):
                             url = url.get('href')
                             if(url != None):
                                 urls_pag.append(url)
-                        anidacionTabs += '\t'
+                        anidacionTabs += ' '
                         for url in urls_pag:
                             if (contadorSaltos <= (MAX_LINKS-1)):
                                 url = url.encode('utf-8')
