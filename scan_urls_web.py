@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from BeautifulSoup import BeautifulSoup
 import requests
+import time
 
 contadorSaltos = 0
 urlsVisitadas = []
 listaUrls = []
 enlacesErroneos = 0
 listaEnlacesErroneos = []
-MAX_LINKS = 100;                  # Set the max number of links to scan (the net is infinite :P)
+MAX_LINKS = 500;                  # Set the max number of links to scan (the net is infinite :P)
 URL_SCAN = 'http://google.com'   # Set the page you want to scan
 
 maxEnlaces = 0; # count number of visited
@@ -106,7 +107,12 @@ def main():
         while '.' not in urlToScan:
             print 'Error: you must enter a valid URL'
             urlToScan = raw_input('Enter an URL to scan -> ')
+        start_time = time.time()
         extraerdatos(urlToScan,0)
+        finish_time = time.time()
+        executionTime = finish_time - start_time
+        executionTime = round(executionTime,4)
+        print 'Execution time: ' + str(executionTime) + ' s'
         printStatus()
         resetDatos()
         print ''
