@@ -7,7 +7,7 @@ urlsVisitadas = []
 listaUrls = []
 enlacesErroneos = 0
 listaEnlacesErroneos = []
-MAX_LINKS = 40;                  # Set the max number of links to scan (the net is infinite :P)
+MAX_LINKS = 100;                  # Set the max number of links to scan (the net is infinite :P)
 URL_SCAN = 'http://google.com'   # Set the page you want to scan
 
 maxEnlaces = 0; # count number of visited
@@ -58,7 +58,7 @@ def extraerdatos(url, indentationLevel):
                                 if (url != None):  # There are <a> items without 'href' attribute
                                     if(url not in listaUrls):
                                         if(url != '#' and ('http' or 'https') in url):
-                                            print anidacionTabs+'url: ' + str(url)
+                                            print anidacionTabs+'Page: ' + str(url)
                                             listaUrls.append(str(url))
                                             maxEnlaces += 1;
 
@@ -72,6 +72,9 @@ def extraerdatos(url, indentationLevel):
                     print anidacionTabs+'## Error loading page: ' + url +''
             except requests.ConnectionError:
                 print anidacionTabs + '## ERROR: connection error'
+            except requests.exceptions.InvalidSchema:
+                #print anidacionTabs+ 'Error InvalidSchema'
+                return -1
 
 def printStatus():
     print '\n==== STATS ===='
@@ -94,7 +97,8 @@ def resetDatos():
 
 def main():
     print 'Welcome to the web URLs Scanner! # Developed by www.miguelms.es'
-    print 'type \'exit\' to close the program.\n'
+    print 'Scan all the links in a website. Find broken links!'
+    print 'Type \'exit\' to close the program.\n'
     while(1):
         urlToScan = raw_input('Enter an URL to scan -> ')
         if(urlToScan == 'exit'):
