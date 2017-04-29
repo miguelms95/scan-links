@@ -5,24 +5,30 @@ import requests
 contadorSaltos = 0
 urlsVisitadas = []
 listaUrls = []
+enlacesErroneos = 0
+listaEnlacesErroneos = []
 MAX_LINKS = 40;                  # Set the max number of links to scan (the net is infinite :P)
 URL_SCAN = 'http://google.com'   # Set the page you want to scan
 
 maxEnlaces = 0; # count number of visited
 domain = ''
 
-def extraerdatos(url, page_anidada):
-    global contadorSaltos, maxEnlaces, domain
+def extraerdatos(url, indentationLevel):
+    global contadorSaltos, maxEnlaces, domain, enlacesErroneos, listaEnlacesErroneos
     if(domain == ''):
-        domain = url.split('/')
-        domain = domain [2]
-        print domain
+        if 'http' in url:
+            domain = url.split('/')
+            domain = domain [2]
+            # print domain
+    if 'http' not in url:
+        url = 'http://'+url
+
     anidacionTabs = ''
-    for i in range(page_anidada):
+    for i in range(indentationLevel):
         anidacionTabs = anidacionTabs + '  '
     if (url not in urlsVisitadas) and (domain in url):
         if 'mailto:' in url:
-            print anidacionTabs+'error unicode'
+            print anidacionTabs+'ERROR: unicode'
         else:
             try:
                 page = requests.get(url);
@@ -56,17 +62,49 @@ def extraerdatos(url, page_anidada):
                                             listaUrls.append(str(url))
                                             maxEnlaces += 1;
 
-                                            extraerdatos(str(url),page_anidada+1)
+                                            extraerdatos(str(url), indentationLevel + 1)
 
                     except UnicodeEncodeError:
                         print anidacionTabs+'error unicode'
                 else:
-                    print anidacionTabs+'! --> Error en la web ' + url +''
+                    enlacesErroneos += 1
+                    listaEnlacesErroneos.append(url)
+                    print anidacionTabs+'## Error loading page: ' + url +''
             except requests.ConnectionError:
-                print anidacionTabs + '!--> connection error'
+                print anidacionTabs + '## ERROR: connection error'
 
+def printStatus():
+    print '\n==== STATS ===='
+    print '' + str(maxEnlaces) + ' links found in ' + str(len(urlsVisitadas)) + ' page(s)'
+    if(enlacesErroneos > 0):
+        print '' + str(enlacesErroneos) + ' broken url(s) found:'
+        print listaEnlacesErroneos
+    else:
+        print 'No broken urls found!'
 
+def resetDatos():
+    global contadorSaltos, urlsVisitadas, listaEnlacesErroneos, listaUrls, enlacesErroneos, maxEnlaces, domain
+    contadorSaltos = 0
+    urlsVisitadas = []
+    listaUrls = []
+    enlacesErroneos = 0
+    listaEnlacesErroneos = []
+    maxEnlaces = 0;  # count number of visited
+    domain = ''
 
-extraerdatos(URL_SCAN,0)
-print '==== STATS ===='
-print '' + str(maxEnlaces) + ' links in '+ str(len(urlsVisitadas)) +' page(s)'
+def main():
+    print 'Welcome to the web URLs Scanner! # Developed by www.miguelms.es'
+    print 'type \'exit\' to close the program.\n'
+    while(1):
+        urlToScan = raw_input('Enter an URL to scan -> ')
+        if(urlToScan == 'exit'):
+            exit(0)
+        while '.' not in urlToScan:
+            print 'Error: you must enter a valid URL'
+            urlToScan = raw_input('Enter an URL to scan -> ')
+        extraerdatos(urlToScan,0)
+        printStatus()
+        resetDatos()
+        print ''
+
+main()
