@@ -1,4 +1,4 @@
-# Scan links
+# 🌐 Scan links
 Get all the links in a website: Count and check broken links.
 
 This program prints a hierarchy of the linked urls in a web. Exploring the net :D
