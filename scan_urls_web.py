@@ -13,6 +13,7 @@ URL_SCAN = 'http://google.com'   # Set the page you want to scan
 
 maxEnlaces = 0; # count number of visited
 domain = ''
+TRAZA = True
 
 def extraerdatos(url, indentationLevel):
     global contadorSaltos, maxEnlaces, domain, enlacesErroneos, listaEnlacesErroneos
@@ -29,7 +30,8 @@ def extraerdatos(url, indentationLevel):
         anidacionTabs = anidacionTabs + '  '
     if (url not in urlsVisitadas) and (domain in url): # here comment 'and (domain in url)' for checking the links in the webpages linked too (not recommended)
         if 'mailto:' in url:
-            print anidacionTabs+'ERROR: unicode'
+            if (TRAZA):
+                print anidacionTabs+'ERROR: unicode'
         else:
             try:
                 page = requests.get(url);
@@ -43,9 +45,11 @@ def extraerdatos(url, indentationLevel):
                             titulo=titulo.string
                             titulo = str(titulo).replace('\n','')
                             titulo = titulo.replace('\t', ' ')
-                            print anidacionTabs+'#' + str(contadorSaltos) + ' - ' + titulo
+                            if(TRAZA):
+                                print anidacionTabs+'#' + str(contadorSaltos) + ' - ' + titulo
                         else:
-                            print anidacionTabs+'#' + str(contadorSaltos)
+                            if(TRAZA):
+                                print anidacionTabs+'#' + str(contadorSaltos)
                         urls_pag_raw = html.findAll('a')
                         urls_pag = []
                         for url in urls_pag_raw:
@@ -59,20 +63,24 @@ def extraerdatos(url, indentationLevel):
                                 if (url != None):  # There are <a> items without 'href' attribute
                                     if(url not in listaUrls):
                                         if(url != '#' and ('http' or 'https') in url):
-                                            print anidacionTabs+'Page: ' + str(url)
+                                            if(TRAZA):
+                                                print anidacionTabs+'Page: ' + str(url)
                                             listaUrls.append(str(url))
                                             maxEnlaces += 1;
 
                                             extraerdatos(str(url), indentationLevel + 1)
 
                     except UnicodeEncodeError:
-                        print anidacionTabs+'error unicode'
+                        if (TRAZA):
+                            print anidacionTabs+'error unicode'
                 else:
                     enlacesErroneos += 1
                     listaEnlacesErroneos.append(url)
-                    print anidacionTabs+'## Error loading page: ' + url +''
+                    if (TRAZA):
+                        print anidacionTabs+'## Error loading page: ' + url +''
             except requests.ConnectionError:
-                print anidacionTabs + '## ERROR: connection error'
+                if (TRAZA):
+                    print anidacionTabs + '## ERROR: connection error'
             except requests.exceptions.InvalidSchema:
                 #print anidacionTabs+ 'Error InvalidSchema'
                 return -1
@@ -97,16 +105,36 @@ def resetDatos():
     domain = ''
 
 def main():
+    global MAX_LINKS, TRAZA
     print 'Welcome to the web URLs Scanner! # Developed by www.miguelms.es'
     print 'Scan all the links in a website. Find broken links!'
     print 'Type \'exit\' to close the program.\n'
+    print 'Enter the url to scan with parameters: ' \
+          '\n\t\t-nt # Disable the printing trace'# \
+          #'\n\t\t-max XX # Set the max number of pages to jump during the scan'
+    print 'Example: -> google.com' \
+          '\n\t\t-> google.com -nt'
+          #'\n\t\t-> google.com -max 100' \
+          #'\n\t\t-> google.com -nt -max 100'
     while(1):
-        urlToScan = raw_input('Enter an URL to scan -> ')
+        urlToScan = raw_input('-> ')
         if(urlToScan == 'exit'):
             exit(0)
         while '.' not in urlToScan:
             print 'Error: you must enter a valid URL'
-            urlToScan = raw_input('Enter an URL to scan -> ')
+            urlToScan = raw_input('-> ')
+        '''if '-max' in urlToScan:
+            data = urlToScan.split('-max ')
+            numberMax = data[1].split(' ')[0]
+            print 'numberMax: ' + numberMax
+            MAX_LINKS = numberMax
+            urlToScan = data[0]
+            urlToScan = urlToScan.replace(' ','')
+            print 'URL A ESCANEAR: ' + urlToScan'''
+        if '-nt' in urlToScan:
+            TRAZA = False
+            urlToScan = urlToScan.split('-nt')[0]
+            urlToScan = urlToScan.replace(' ','')
         start_time = time.time()
         extraerdatos(urlToScan,0)
         finish_time = time.time()
