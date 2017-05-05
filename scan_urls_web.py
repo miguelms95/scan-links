@@ -140,8 +140,8 @@ def main():
         finish_time = time.time()
         executionTime = finish_time - start_time
         executionTime = round(executionTime,4)
-        print 'Execution time: ' + str(executionTime) + ' s'
         printStatus()
+        print '\nExecution time: ' + str(executionTime) + ' s. Load average: ' + str(round(len(urlsVisitadas) / executionTime, 4)) + ' seconds/page.'
         resetDatos()
         print ''
 
